@@ -55,10 +55,10 @@ class PageViewModel {
   PageViewModel(
       {this.pageColor,
       this.iconImageAssetPath,
-      this.bubbleBackgroundColor = const Color(0x88FFFFFF),
+      this.bubbleBackgroundColor = const Color(0xFFFFFFFF),
       this.iconColor,
-      @required this.title,
-      @required this.body,
+      this.title = const SizedBox(),
+      this.body = const SizedBox(),
       @required this.mainImage,
       this.bubble,
       this.textStyle,
