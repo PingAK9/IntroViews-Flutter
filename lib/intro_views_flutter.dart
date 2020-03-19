@@ -253,7 +253,8 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
           ), //PageReveal
 
           Positioned(
-            bottom: 30,
+            bottom: 25,
+            left: 0, right: 0,
             child: PagerIndicator(
               //bottom page indicator
               viewModel: PagerIndicatorViewModel(
