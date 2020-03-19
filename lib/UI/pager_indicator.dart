@@ -38,9 +38,7 @@ class PagerIndicator extends StatelessWidget {
       }
 
       //Checking is that bubble hollow
-      bool isHollow = i > viewModel.activeIndex ||
-          (i == viewModel.activeIndex &&
-              viewModel.slideDirection == SlideDirection.leftToRight);
+      bool isHollow = i == viewModel.activeIndex;
 
       //Adding to the list
       bubbles.add(PageBubble(
