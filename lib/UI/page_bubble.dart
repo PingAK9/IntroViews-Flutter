@@ -20,21 +20,18 @@ class PageBubble extends StatelessWidget {
         width: 6 + lerpDouble(5, 20, viewModel.activePercent),
         height: 20.0,
         child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Container(
-              width: lerpDouble(5, 20, viewModel.activePercent),
-              //This method return in between values according to active percent.
-              height: 5,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                //Alpha is used to create fade effect for background color
-                color: viewModel.isHollow
-                    ? viewModel.bubbleBackgroundColor
-                    : viewModel.bubbleBackgroundColor
-                        .withAlpha((0x88 * viewModel.activePercent).round()),
-              ), //BoxDecoration
-            ), //Container
+          child: Container(
+            width: lerpDouble(5, 20, viewModel.activePercent),
+            //This method return in between values according to active percent.
+            height: 5,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              //Alpha is used to create fade effect for background color
+              color: viewModel.isHollow
+                  ? viewModel.bubbleBackgroundColor
+                  : viewModel.bubbleBackgroundColor
+                      .withAlpha((0x88 * viewModel.activePercent).round()),
+            ), //BoxDecoration
           ), //Padding
         ), //Center
       );
