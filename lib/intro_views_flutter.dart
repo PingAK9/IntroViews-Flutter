@@ -252,13 +252,16 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
                 columnMainAxisAlignment: widget.columnMainAxisAlignment),
           ), //PageReveal
 
-          PagerIndicator(
-            //bottom page indicator
-            viewModel: PagerIndicatorViewModel(
-              pages,
-              activePageIndex,
-              slideDirection,
-              slidePercent,
+          Positioned(
+            bottom: 30,
+            child: PagerIndicator(
+              //bottom page indicator
+              viewModel: PagerIndicatorViewModel(
+                pages,
+                activePageIndex,
+                slideDirection,
+                slidePercent,
+              ),
             ),
           ), //PagerIndicator
 

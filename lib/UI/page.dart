@@ -59,7 +59,7 @@ class Page extends StatelessWidget {
           ),
         ), //Transform
         Flexible(
-          flex: 2,
+          flex: 1,
           child: new _BodyPageTransform(
             percentVisible: percentVisible,
             pageViewModel: pageViewModel,
