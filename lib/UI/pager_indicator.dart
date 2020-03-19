@@ -55,14 +55,13 @@ class PagerIndicator extends StatelessWidget {
 
 
     //UI
-    return Column(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: bubbles,
-        ), //Transform
-      ], //Children
+    return Container(
+      height: 65,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: bubbles,
+      ),
     ); //Column
   }
 }

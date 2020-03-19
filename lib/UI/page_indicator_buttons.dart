@@ -206,7 +206,7 @@ class PageIndicatorButtons extends StatelessWidget {
     return Positioned(
       left: 0.0,
       right: 0.0,
-      bottom: 0.0,
+      bottom: 25.0,
       child: DefaultTextStyle(
         style: textStyle,
         child: Row(
