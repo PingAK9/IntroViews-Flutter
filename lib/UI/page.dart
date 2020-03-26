@@ -9,7 +9,7 @@ class Page extends StatelessWidget {
   ///percent visible of page
   final double percentVisible;
 
-  /// [MainAxisAligment]
+  /// [MainAxisAlignment]
   final MainAxisAlignment columnMainAxisAlignment;
 
   //Constructor
@@ -45,7 +45,8 @@ class Page extends StatelessWidget {
       mainAxisAlignment: columnMainAxisAlignment,
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
-        SafeArea(
+        Flexible(
+          flex: 1,
           child: new _TitlePageTransform(
             percentVisible: percentVisible,
             pageViewModel: pageViewModel,
@@ -58,8 +59,7 @@ class Page extends StatelessWidget {
             pageViewModel: pageViewModel,
           ),
         ), //Transform
-        Flexible(
-          flex: 1,
+        SafeArea(
           child: new _BodyPageTransform(
             percentVisible: percentVisible,
             pageViewModel: pageViewModel,
