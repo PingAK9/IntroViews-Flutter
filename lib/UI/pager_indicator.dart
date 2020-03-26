@@ -7,13 +7,9 @@ import 'package:intro_views_flutter/UI/page_bubble.dart';
 /// This class contains the UI elements associated with bottom page indicator.
 
 class PagerIndicator extends StatelessWidget {
-  //view model
-  final PagerIndicatorViewModel viewModel;
+  PagerIndicator({this.viewModel});
 
-  //Constructor
-  PagerIndicator({
-    this.viewModel,
-  });
+  final PagerIndicatorViewModel viewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -37,30 +33,28 @@ class PagerIndicator extends StatelessWidget {
         percentActive = 0.0;
       }
 
-      //Checking is that bubble hollow
-      bool isHollow = i == viewModel.activeIndex;
-
       //Adding to the list
-      bubbles.add(PageBubble(
-        viewModel: PageBubbleViewModel(
-          iconAssetPath: page.iconImageAssetPath,
-          iconColor: page.iconColor,
-          isHollow: isHollow,
-          activePercent: percentActive,
-          bubbleBackgroundColor: page.bubbleBackgroundColor,
-          bubbleInner: page.bubble,
+      bubbles.add(
+        PageBubble(
+          viewModel: PageBubbleViewModel(
+            isHollow: i == viewModel.activeIndex,
+            activePercent: percentActive,
+            bubbleBackgroundColor: page.bubbleBackgroundColor,
+          ),
         ),
-      ));
+      );
     }
 
-
     //UI
-    return Container(
-      height: 65,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: bubbles,
+    return IgnorePointer(
+      child: Container(
+        height: 65,
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: bubbles,
+        ),
       ),
     ); //Column
   }

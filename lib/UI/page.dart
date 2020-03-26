@@ -45,15 +45,13 @@ class Page extends StatelessWidget {
       mainAxisAlignment: columnMainAxisAlignment,
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
-        Flexible(
-          flex: 1,
+        SafeArea(
           child: new _TitlePageTransform(
             percentVisible: percentVisible,
             pageViewModel: pageViewModel,
           ),
         ), //Transform
         Expanded(
-          flex: 4,
           child: new _ImagePageTransform(
             percentVisible: percentVisible,
             pageViewModel: pageViewModel,

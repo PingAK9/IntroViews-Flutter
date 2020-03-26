@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 
-//view model for pages
 
 class PageViewModel {
   /// Page BackGround Color
   final Color pageColor;
-
-  ///icon image path
-  final String iconImageAssetPath;
-
-  /// iconColor
-  final Color iconColor;
 
   /// color for background of progress bubbles
   ///
@@ -45,22 +38,13 @@ class PageViewModel {
   /// _typicaly a Image Widget_
   final Widget mainImage;
 
-  /// bubble inner Widget
-  ///
-  /// _typicaly a Image Widget_
-  ///
-  /// gets overriden by [iconImageAssetPath]
-  final Widget bubble;
 
   PageViewModel(
       {this.pageColor,
-      this.iconImageAssetPath,
       this.bubbleBackgroundColor = const Color(0xFFFFFFFF),
-      this.iconColor,
       this.title = const SizedBox(),
       this.body = const SizedBox(),
       @required this.mainImage,
-      this.bubble,
       this.textStyle,
       this.titleTextStyle,
       this.bodyTextStyle});

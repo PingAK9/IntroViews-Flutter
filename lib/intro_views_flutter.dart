@@ -15,6 +15,8 @@ import 'package:intro_views_flutter/UI/page_indicator_buttons.dart';
 import 'package:intro_views_flutter/UI/pager_indicator.dart';
 import 'package:intro_views_flutter/UI/page.dart';
 
+import 'Models/page_button_view_model.dart';
+
 /// This is the IntroViewsFlutter widget of app which is a stateful widget as its state is dynamic and updates asynchronously.
 class IntroViewsFlutter extends StatefulWidget {
   /// List of [PageViewModel] to display
@@ -30,6 +32,7 @@ class IntroViewsFlutter extends StatefulWidget {
 
   /// Whether you want to show the skip button or not.
   final bool showSkipButton;
+  final bool skipButtonOnTop;
 
   /// Whether you want to show the next button or not.
   final bool showNextButton;
@@ -104,6 +107,7 @@ class IntroViewsFlutter extends StatefulWidget {
     this.onTapBackButton,
     this.showNextButton = false,
     this.showBackButton = false,
+    this.skipButtonOnTop = false,
     this.pageButtonTextSize = 18.0,
     this.pageButtonFontFamily,
     this.onTapSkipButton,
@@ -257,7 +261,6 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
             left: 0,
             right: 0,
             child: PagerIndicator(
-              //bottom page indicator
               viewModel: PagerIndicatorViewModel(
                 pages,
                 activePageIndex,
@@ -265,8 +268,26 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
                 slidePercent,
               ),
             ),
-          ), //PagerIndicator
-
+          ), //P
+          if (widget.showSkipButton && widget.skipButtonOnTop)
+            Positioned(
+              top: 25,
+              right: 0,
+              child: DefaultTextStyle(
+                style: textStyle,
+                child: DefaultButton(
+                  child: widget.skipText,
+                  onTap: onPressedSkip,
+                  pageButtonViewModel: PageButtonViewModel(
+                    //View Model
+                    activePageIndex: activePageIndex,
+                    totalPages: pages.length,
+                    slidePercent: slidePercent,
+                    slideDirection: slideDirection,
+                  ),
+                ),
+              ),
+            ),
           PageIndicatorButtons(
             //Skip and Done Buttons
             textStyle: textStyle,
@@ -288,21 +309,10 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
                 }
               });
             },
-            showSkipButton: widget.showSkipButton,
+            showSkipButton: widget.showSkipButton && !widget.skipButtonOnTop,
             showNextButton: widget.showNextButton,
             showBackButton: widget.showBackButton,
-            onPressedNextButton: () {
-              //method executed on pressing next button
-              setState(() {
-                activePageIndex = min(pages.length - 1, activePageIndex + 1);
-                nextPageIndex = min(pages.length - 1, nextPageIndex + 1);
-                // after next pressed invoke function
-                // this can be used for analytics/page transition
-                if (widget.onTapNextButton != null) {
-                  widget.onTapNextButton();
-                }
-              });
-            },
+            onPressedNextButton: onPressedSkip,
             onPressedBackButton: () {
               //method executed on pressing back button
               setState(() {
@@ -328,9 +338,21 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
             canDragLeftToRight: activePageIndex > 0,
             canDragRightToLeft: activePageIndex < pages.length - 1,
             slideUpdateStream: this.slideUpdateStream,
-          ), //PageDragger
+          ),
         ], //Widget
       ), //Stack
     ); //Scaffold
+  }
+
+  void onPressedSkip() {
+    setState(() {
+      activePageIndex = min(widget.pages.length - 1, activePageIndex + 1);
+      nextPageIndex = min(widget.pages.length - 1, nextPageIndex + 1);
+      // after next pressed invoke function
+      // this can be used for analytics/page transition
+      if (widget.onTapNextButton != null) {
+        widget.onTapNextButton();
+      }
+    });
   }
 }
