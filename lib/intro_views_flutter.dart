@@ -132,18 +132,33 @@ class IntroViewsFlutter extends StatefulWidget {
 
 class _IntroViewsFlutterState extends State<IntroViewsFlutter>
     with TickerProviderStateMixin {
-  StreamController<SlideUpdate>
-      // ignore: close_sinks
-      slideUpdateStream; //Stream controller is used to get all the updates when user slides across screen.
+  //Stream controller is used to get all the updates when user slides across screen.
+  StreamController<SlideUpdate> slideUpdateStream;
 
-  AnimatedPageDragger
-      animatedPageDragger; //When user stops dragging then by using this page automatically drags.
+  //When user stops dragging then by using this page automatically drags.
+  AnimatedPageDragger animatedPageDragger;
+
+  void animationToPage(int page) {
+    nextPageIndex = indexWhenDoneAnimation = page;
+    animatedPageDragger = AnimatedPageDragger(
+      slideDirection: activePageIndex > nextPageIndex
+          ? SlideDirection.leftToRight
+          : SlideDirection.rightToLeft,
+      transitionGoal: TransitionGoal.open,
+      slidePercent: slidePercent,
+      slideUpdateStream: slideUpdateStream,
+      vsync: this,
+    );
+    animatedPageDragger.run();
+  }
 
   int activePageIndex = 0; //active page index
   int nextPageIndex = 0; //next page index
   SlideDirection slideDirection = SlideDirection.none; //slide direction
   double slidePercent = 0.0; //slide percentage (0.0 to 1.0)
   StreamSubscription<SlideUpdate> slideUpdateStream$;
+
+  int indexWhenDoneAnimation;
 
   @override
   void initState() {
@@ -167,20 +182,11 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
           } else {
             nextPageIndex = activePageIndex;
           }
-        }
-        //if the user has done dragging
-        else if (event.updateType == UpdateType.doneDragging) {
+        } else if (event.updateType == UpdateType.doneDragging) {
           //Auto completion of event using Animated page dragger.
           if (slidePercent > 0.5) {
-            animatedPageDragger = AnimatedPageDragger(
-              slideDirection: slideDirection,
-              transitionGoal: TransitionGoal.open,
-              //we have to animate the open page reveal
-              slidePercent: slidePercent,
-              slideUpdateStream: slideUpdateStream,
-              vsync: this,
-            );
-          } else {
+            animationToPage(nextPageIndex);
+          } else if (slidePercent <= 0.5) {
             animatedPageDragger = AnimatedPageDragger(
               slideDirection: slideDirection,
               transitionGoal: TransitionGoal.close,
@@ -189,26 +195,17 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
               slideUpdateStream: slideUpdateStream,
               vsync: this,
             );
-            //also next page is active page
-            nextPageIndex = activePageIndex;
+            indexWhenDoneAnimation = activePageIndex;
           }
-          //Run the animation
           animatedPageDragger.run();
-        }
-        //when animating
-        else if (event.updateType == UpdateType.animating) {
+        } else if (event.updateType == UpdateType.animating) {
           slideDirection = event.direction;
           slidePercent = event.slidePercent;
-        }
-        //done animating
-        else if (event.updateType == UpdateType.doneAnimating) {
-          activePageIndex = nextPageIndex;
-
+        } else if (event.updateType == UpdateType.doneAnimating) {
+          activePageIndex = indexWhenDoneAnimation;
+          nextPageIndex = indexWhenDoneAnimation;
           slideDirection = SlideDirection.none;
           slidePercent = 0.0;
-
-          //disposing the animation controller
-          // animatedPageDragger?.dispose();
         }
       });
     });
@@ -237,7 +234,6 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
     List<PageViewModel> pages = widget.pages;
 
     return Scaffold(
-      //Stack is used to place components over one another.
       resizeToAvoidBottomPadding: false,
       backgroundColor: widget.background,
       body: Stack(
@@ -277,17 +273,8 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
               right: 0,
               child: DefaultTextStyle(
                 style: textStyle,
-                child: DefaultButton(
-                  child: widget.skipText,
-                  onTap: onPressedSkip,
-                  pageButtonViewModel: PageButtonViewModel(
-                    //View Model
-                    activePageIndex: activePageIndex,
-                    totalPages: pages.length,
-                    slidePercent: slidePercent,
-                    slideDirection: slideDirection,
-                  ),
-                ),
+                child:
+                    DefaultButton(child: widget.skipText, onTap: onPressedSkip),
               ),
             ),
           PageIndicatorButtons(
@@ -325,38 +312,14 @@ class _IntroViewsFlutterState extends State<IntroViewsFlutter>
   }
 
   void onPressedBack() {
-    setState(() {
-      activePageIndex = max(0, activePageIndex - 1);
-      nextPageIndex = max(0, nextPageIndex - 1);
-      // after next pressed invoke function
-      // this can be used for analytics/page transition
-      if (widget.onTapBackButton != null) {
-        widget.onTapBackButton();
-      }
-    });
+    animationToPage(max(0, activePageIndex - 1));
   }
 
   void onPressedNext() {
-    setState(() {
-      activePageIndex = min(widget.pages.length - 1, activePageIndex + 1);
-      nextPageIndex = min(widget.pages.length - 1, nextPageIndex + 1);
-      // after next pressed invoke function
-      // this can be used for analytics/page transition
-      if (widget.onTapNextButton != null) {
-        widget.onTapNextButton();
-      }
-    });
+    animationToPage(min(widget.pages.length - 1, activePageIndex + 1));
   }
 
   void onPressedSkip() {
-    setState(() {
-      activePageIndex = widget.pages.length - 1;
-      nextPageIndex = activePageIndex;
-      // after skip pressed invoke function
-      // this can be used for analytics/page transition
-      if (widget.onTapSkipButton != null) {
-        widget.onTapSkipButton();
-      }
-    });
+    animationToPage(widget.pages.length - 1);
   }
 }

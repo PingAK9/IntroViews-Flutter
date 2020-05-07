@@ -12,12 +12,7 @@ enum SlideDirection {
   none,
 }
 
-enum UpdateType {
-  dragging,
-  doneDragging,
-  animating,
-  doneAnimating,
-}
+enum UpdateType { dragging, doneDragging, animating, doneAnimating }
 
 enum TransitionGoal {
   open,
